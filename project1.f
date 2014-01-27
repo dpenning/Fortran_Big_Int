@@ -14,17 +14,17 @@ c 	The system is "BigEndian" in that the least signifigant
 	integer i_val
 	integer i_number_of_digits
 
-	i_number_of_digits = 4
+	i_number_of_digits = 3
+	i_iterations = 100
 	
 	call init_bigint_storage_space(i_bigint_storage)
-	call print_bigint_debug(1,16,i_bigint_storage)
-	call allocate(4,i_bigint_storage)
+	call allocate(1,i_bigint_storage)
 	i_bigint_storage(2) = 1
 	i_bigint_storage(3) = 1
-	call print_bigint_debug(1,16,i_bigint_storage)
+	do 100 iter = 1,i_iterations
 	call double_last_bigint(i_number_of_digits,i_bigint_storage)
-	call print_bigint_debug(1,16,i_bigint_storage)
-	call print_nice_last_bigint(i_number_of_digits,i_bigint_storage)
+	call pretty_print(1,i_number_of_digits,i_bigint_storage)
+  100	continue
 
 	end program project_1
 
@@ -76,7 +76,7 @@ c 	it starts the linked list and sets all vals to 0
   6	i_bis(1) = -1
 	end
 
-
+c 	This Subroutine Prints a bigint array section
 	subroutine print_bigint_debug(i_start,i_stop,i_bis)
 	integer i_start
 	integer i_stop
@@ -88,6 +88,7 @@ c 	it starts the linked list and sets all vals to 0
   	write(*,*)"-----------"
   	end
 
+c 	This Subroutine get the index of the last bigint
   	subroutine get_last_bigint_index(i_return_val,i_bis)
   	integer i_return_val
   	integer i_bis(3000)
@@ -101,6 +102,7 @@ c 	it starts the linked list and sets all vals to 0
   	goto 8
   11	end
 
+c 	This subroutine normalizes the last bigint
   	subroutine normalize_last_big_int(i_digit_length,i_bis)
   	integer i_digit_length
   	integer i_bis(3000)
@@ -135,17 +137,88 @@ c 	it starts the linked list and sets all vals to 0
   17	continue
   	end
 
+c 	This Subroutine doubles the last bigint
   	subroutine double_last_bigint(i_digit_length,i_bis)
   	integer i_digit_length
   	integer i_bis(3000)
   	integer index
   	call get_last_bigint_index(index,i_bis)
   	do 18 iter = index + 2, index + 1 + i_bis(index)
-  	write(*,*) i_bis(iter)
   	i_bis(iter) = i_bis(iter)+i_bis(iter)
   18	continue
   	call normalize_last_big_int(i_digit_length,i_bis)
   	end
+
+c 	This subroutine prints an individual int for the specified size
+	subroutine print_individual_digits(i_z,i_digits,int_value)
+	integer i_z
+	integer int_value
+	integer	i_digits
+	integer check_value
+	integer print_value
+
+	check_value = 1
+	print_value = 1
+	int_value_copy = int_value
+
+	do 19 iter = 1,i_digits-1
+	print_value = print_value * 10
+  19	continue
+
+  20	if(int_value - check_value) 21,22,23
+  21	check_value = check_value/10
+  	goto 24	
+  22	goto 24
+  23	check_value = check_value * 10
+  	goto 20
+  24	continue
+
+  	if(i_z) 29,29,25
+  25	if (print_value-check_value) 26,27,28
+  26	goto 29
+  27	goto 29
+  28	write(*,'(I1,$)') 0
+  	print_value = print_value/10
+  	goto 25
+
+  29	if (check_value) 30,31,32
+  30	goto 33
+  31	goto 33
+  32	i_c = int_value_copy/check_value
+  	write(*,'(I1,$)') i_c
+  	int_value_copy = int_value_copy - i_c*check_value
+  	check_value = check_value/10
+  	goto 29
+  33	continue
+  	end
+
+c 	This subroutine prints the Bigints nicely
+	
+	subroutine pretty_print(i_bii,i_d,i_bis)
+	integer i_bii
+	integer i_d
+	integer i_bis(3000)
+	integer i_z
+	integer num_ints
+
+	i_z = 0
+	num_ints = i_bis(i_bii)
+	do 35 iter = i_bii+num_ints+1,i_bii+2,-1
+	call print_individual_digits(i_z,i_d,i_bis(iter))
+	write(*,'(A,$)')" "
+	if (i_bis(iter)) 35,35,34
+  34	i_z = 1
+  35	continue
+  	write(*,'(A)')""
+
+
+	end
+
+
+
+
+
+
 
 
 
