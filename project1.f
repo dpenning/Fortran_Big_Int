@@ -7,6 +7,7 @@ c 	Each BigInt is stored with its size as the first int
 c 	and its sign as the second int. The rest of the integers
 c 	from [2,size+2] are the values of the bigint
 c 	The system is "BigEndian" in that the least signifigant
+c       value is the start of the bigint
 
 	program project_1
 
@@ -15,14 +16,22 @@ c 	The system is "BigEndian" in that the least signifigant
 	integer i_number_of_digits
 
 	i_number_of_digits = 3
-	i_iterations = 100
+	i_iterations = 10
 	
+        call init_bigint_storage_space(i_bigint_storage)
+        call print_bigint_debug(1,32,i_bigint_storage)
+        call allocate(4,i_bigint_storage)
+        call print_bigint_debug(1,32,i_bigint_storage)
+        call allocate(5,i_bigint_storage)
+        call print_bigint_debug(1,32,i_bigint_storage)
+
 	call init_bigint_storage_space(i_bigint_storage)
 	call allocate(1,i_bigint_storage)
 	i_bigint_storage(2) = 1
 	i_bigint_storage(3) = 1
 	do 100 iter = 1,i_iterations
 	call double_last_bigint(i_number_of_digits,i_bigint_storage)
+        call print_bigint_debug(1,32,i_bigint_storage)
 	call pretty_print(1,i_number_of_digits,i_bigint_storage)
   100	continue
 
@@ -213,13 +222,3 @@ c 	This subroutine prints the Bigints nicely
 
 
 	end
-
-
-
-
-
-
-
-
-
-
