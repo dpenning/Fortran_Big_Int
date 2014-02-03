@@ -2,24 +2,21 @@
 	integer i_bigint_storage(3000)
 	integer i_digit_value
 	integer i_digit_location
+	integer i_location
 
-	i_digit_value = 8
+	i_digit_value = 10
 
 	call init(i_bigint_storage)
-	call print_bigint_debug(1,16,i_bigint_storage)
-	call allocate(i_bigint_storage,2,i_digit_location)
-	write(*,*)i_digit_location
-	call print_bigint_debug(1,16,i_bigint_storage)
-	i_bigint_storage(i_digit_location+1) = 1
-	i_bigint_storage(i_digit_location+2) = 36
-	call print_bigint_debug(1,16,i_bigint_storage)
-	call normalize_bigint(i_bigint_storage,i_digit_location, 
-     1  i_digit_value)
-	call print_bigint_debug(1,16,i_bigint_storage)
-	call add_bigints(i_bigint_storage,1,1,i_digit_value,i_new_loc)
-	call print_bigint_debug(1,16,i_bigint_storage)
-	end program project_1
+	call allocate(i_bigint_storage,4,i_location)
+	i_bigint_storage(i_location+2) = 1 
+	do 150 iter = 1,1
+	call print_bigint(i_bigint_storage,i_location,i_digit_value)
+	call add_bigints(i_bigint_storage,i_location,i_location,
+     1  i_digit_value,i_location)
 
+  150 	continue
+  	call print_bigint(i_bigint_storage,i_location,i_digit_value)
+	end
 c 	INIT
 	subroutine init(i_bis)
 	integer i_bis(3000)
@@ -103,8 +100,37 @@ c 	PRINT
 	integer i_bis(3000)
 	integer i_loc
 	integer i_digit
-
+	do 140 iter = i_loc+2,i_loc+i_bis(i_loc)+2
+	call print_one_character(i_bis(iter))
+	write(*,'(A,$)')" "
+  140	continue
+  	write(*,'(A)')" "
 	end
+
+c 	PRINT 1 Character
+
+	subroutine print_one_character(i_int_value)
+	integer i_int_value
+	integer i_i
+	integer i_check_value
+
+	if (i_int_value) 131,130,131
+  130 	write(*,'(I1,$)') 0
+ 	return
+  131 	i_check_value = 1
+  132 	if (i_int_value - i_check_value) 134,133,133
+  133 	i_check_value = i_check_value * 10
+  	goto 132
+  134	i_check_value = i_check_value / 10
+ 	i_i = i_int_value + 0
+  135	if (i_check_value) 137,137,136
+  136	write(*,'(I1,$)') (i_i/i_check_value)
+  	i_i = i_i - (i_i/i_check_value)*i_check_value
+  	i_check_value = i_check_value / 10
+  	goto 135
+  137 	end
+
+
 
 c 	This Subroutine Prints a bigint array section
 	subroutine print_bigint_debug(i_start,i_stop,i_bis)

@@ -1,5 +1,5 @@
 project1:
-	gfortran project_1_new.f
+	gfortran project1.f
 	./a.out
 tests:
 	gfortran tests.f
