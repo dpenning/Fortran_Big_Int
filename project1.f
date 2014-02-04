@@ -18,22 +18,8 @@ c       value is the start of the bigint
 	i_number_of_digits = 3
 	i_iterations = 10
 	
-        call init_bigint_storage_space(i_bigint_storage)
-        call print_bigint_debug(1,32,i_bigint_storage)
-        call allocate(4,i_bigint_storage)
-        call print_bigint_debug(1,32,i_bigint_storage)
-        call allocate(5,i_bigint_storage)
-        call print_bigint_debug(1,32,i_bigint_storage)
-
-	call init_bigint_storage_space(i_bigint_storage)
-	call allocate(1,i_bigint_storage)
-	i_bigint_storage(2) = 1
-	i_bigint_storage(3) = 1
-	do 100 iter = 1,i_iterations
-	call double_last_bigint(i_number_of_digits,i_bigint_storage)
-        call print_bigint_debug(1,32,i_bigint_storage)
-	call pretty_print(1,i_number_of_digits,i_bigint_storage)
-  100	continue
+	call init(i_bigint_storage)
+	call allocate(4,i_bigint_storage)
 
 	end program project_1
 
@@ -219,6 +205,4 @@ c 	This subroutine prints the Bigints nicely
   34	i_z = 1
   35	continue
   	write(*,'(A)')""
-
-
 	end

@@ -3,20 +3,27 @@
 	integer i_digit_value
 	integer i_digit_location
 	integer i_location
+	integer i_tmp
+	integer i_tmp_2
 
 	i_digit_value = 10
+	i_iterations = 50
 
 	call init(i_bigint_storage)
-	call allocate(i_bigint_storage,4,i_location)
-	i_bigint_storage(i_location+2) = 1 
-	do 150 iter = 1,1
-	call print_bigint(i_bigint_storage,i_location,i_digit_value)
-	call add_bigints(i_bigint_storage,i_location,i_location,
-     1  i_digit_value,i_location)
+	call allocate(i_bigint_storage,1,i_tmp)
+	i_bigint_storage(3) = 1
+	call print_bigint(i_bigint_storage,i_tmp,i_digit_value)
+	call add_bigints(i_bigint_storage,1,1,i_digit_value,i_tmp)
+	call print_bigint(i_bigint_storage,i_tmp,i_digit_value)
+	do 400 iter = 2,i_iterations
+	call add_bigints(i_bigint_storage,i_tmp,i_tmp,i_digit_value,
+     1  i_tmp_2)
+	i_tmp = i_tmp_2
+	call print_bigint(i_bigint_storage,i_tmp,i_digit_value)
+  400	continue
 
-  150 	continue
-  	call print_bigint(i_bigint_storage,i_location,i_digit_value)
-	end
+	end program project_1
+
 c 	INIT
 	subroutine init(i_bis)
 	integer i_bis(3000)
@@ -64,7 +71,22 @@ c 	NORMALIZE
   103	continue
   101	continue
   100	continue
+  	end
 
+c 	SHORTEN
+  	subroutine shorten_bigint(i_bis,i_bii)
+  	integer i_bis(3000)
+  	integer i_bii
+  	integer i_last_index
+
+  	i_last_index = i_bis(i_bii) + 1 + i_bii
+  	i_bis(i_last_index+1) = 0
+  300  	if (i_bis(i_last_index)) 301,302,301
+  302	i_bis(i_bii) = i_bis(i_bii) - 1
+  	i_last_index = i_last_index - 1
+  	goto 300
+  301	continue
+  	i_bis(i_last_index+1) = -1
   	end
 
 c 	ADD
@@ -79,7 +101,6 @@ c 	ADD
   	goto 113
   112	i_max_length = i_bis(i_bi2)
   113	continue
-  	write(*,*)i_max_length
   	call allocate(i_bis,i_max_length+1,i_loc)
   	do 115 i_iter = 2,i_max_length+2
   	if (i_bis(i_bi1)+2-i_iter) 117,117,116
@@ -90,34 +111,42 @@ c 	ADD
   	if (i_bis(i_bi2)+2-i_iter) 120,120,119
   119	i_bis(i_loc+i_iter) = i_bis(i_loc+i_iter)+i_bis(i_bi2+i_iter)
   120 	continue
-  	write(*,*)i_bis(i_loc+i_iter)
   115	continue
   	call normalize_bigint(i_bis,i_loc,i_digit)
-  	end
+  	call shorten_bigint(i_bis,i_loc)
+  	end 
 
 c 	PRINT
 	subroutine print_bigint(i_bis,i_loc,i_digit)
 	integer i_bis(3000)
 	integer i_loc
 	integer i_digit
-	do 140 iter = i_loc+2,i_loc+i_bis(i_loc)+2
-	call print_one_character(i_bis(iter))
-	write(*,'(A,$)')" "
+	integer i_print_zeroes
+	i_print_zeroes = 0
+	do 140 iter = i_loc+i_bis(i_loc)+2,i_loc+2,-1
+	call print_one_character(i_bis(iter),i_print_zeroes)
+	if (i_z) 141,141,142
+  142 	write(*,'(A,$)')" "
+  141 	continue
   140	continue
   	write(*,'(A)')" "
 	end
 
 c 	PRINT 1 Character
 
-	subroutine print_one_character(i_int_value)
+	subroutine print_one_character(i_int_value,i_z)
 	integer i_int_value
 	integer i_i
+	integer i_z
 	integer i_check_value
 
 	if (i_int_value) 131,130,131
-  130 	write(*,'(I1,$)') 0
- 	return
-  131 	i_check_value = 1
+
+  130 	if (i_z) 128,129,128
+  128	write(*,'(I1,$)') 0
+  129	return
+  131 	i_z = 1
+  	i_check_value = 1
   132 	if (i_int_value - i_check_value) 134,133,133
   133 	i_check_value = i_check_value * 10
   	goto 132
