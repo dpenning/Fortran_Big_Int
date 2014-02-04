@@ -137,18 +137,26 @@ c 	the add function uses this to control the output bigint
 c 	then the shorten function helps out the normalize function
 c 	by shortening the added value if need be
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	subroutine normalize_bigint(i_bis,i_loc,i_digit)
+	subroutine normalize_bigint(i_bis,i_loc,i_base)
 	integer i_bis(3000)
 	integer i_loc
-	integer i_digit
+	integer i_base
 	integer i_length
 	integer i_quotient
+
 	i_length = i_bis(i_loc)
+
+c 	go through the bigint indexes from the bottom up
   	do 100 i_iter = i_loc+2,i_loc+1+i_length
-  	if (i_bis(i_iter)-i_digit) 101,102,102
-  102	i_quotient = i_bis(i_iter)/i_digit
+
+c 	if the value at the index is greater than the base
+  	if (i_bis(i_iter)-i_base) 101,102,102
+
+c 	set the value to index as the remainder of dividing the base
+c 	add the quotient to the next index
+  102	i_quotient = i_bis(i_iter)/i_base
   	if (i_quotient) 103,103,104
-  104	i_bis(i_iter) = i_bis(i_iter)-(i_quotient*i_digit)
+  104	i_bis(i_iter) = i_bis(i_iter)-(i_quotient*i_base)
   	i_bis(i_iter+1) = i_bis(i_iter+1) + i_quotient
   103	continue
   101	continue
@@ -168,13 +176,19 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   	integer i_bii
   	integer i_last_index
 
+c 	get the index of the last value of the bigint
   	i_last_index = i_bis(i_bii) + 1 + i_bii
   	i_bis(i_last_index+1) = 0
+  	
+c 	while the value is the last index shorten the bigint by 1
   300  	if (i_bis(i_last_index)) 301,302,301
   302	i_bis(i_bii) = i_bis(i_bii) - 1
   	i_last_index = i_last_index - 1
   	goto 300
   301	continue
+
+c 	set the last value after the bigint to -1
+c 	this is so that we dont mess up the end of the linked list
   	i_bis(i_last_index+1) = -1
   	end
 
@@ -189,22 +203,40 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   	integer i_bi2
   	integer i_max_length
   	integer i_loc
+
+c 	Find out which bigint is larger than the other and set
+c  	the max length to that value
   	if(i_bi1-i_bi2) 111,112,112
   111	i_max_length = i_bis(i_bi1)
   	goto 113
   112	i_max_length = i_bis(i_bi2)
   113	continue
+
+c 	allocate the biggest possible integer that we will need for
+c  	for this add, this means max_size+1
   	call allocate(i_bis,i_max_length+1,i_loc)
+
+c 	go through all of the values and add them together and place
+c 	the result in the new bigint
   	do 115 i_iter = 2,i_max_length+2
+
+c 	if the index is too high for the first bigints max_index
+c 	then skip it
   	if (i_bis(i_bi1)+2-i_iter) 117,117,116
   116	i_bis(i_loc+i_iter) = 0+i_bis(i_bi1+i_iter)
   	goto 118
   117	i_bis(i_loc+i_iter) = 0
   118	continue
+
+c 	if the index is too high for the first bigints max_index
+c 	then skip it  
   	if (i_bis(i_bi2)+2-i_iter) 120,120,119
   119	i_bis(i_loc+i_iter) = i_bis(i_loc+i_iter)+i_bis(i_bi2+i_iter)
   120 	continue
   115	continue
+
+c 	now that we have the final number, we need to normalize it
+c 	then we need to shorten it so that we dont use all of the memory
   	call normalize_bigint(i_bis,i_loc,i_digit)
   	call shorten_bigint(i_bis,i_loc)
   	end 
