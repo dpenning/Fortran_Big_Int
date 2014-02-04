@@ -226,7 +226,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   142 	write(*,'(A,$)')" "
   141 	continue
   140	continue
-  	write(*,'(A)')" "
+  	write(*,'(A)')""
 	end
 
 c 	PRINT 1 Character
@@ -237,28 +237,25 @@ c 	us whether to print 0s or not
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine print_one_character(i_int_value,i_z)
 	integer i_int_value
-	integer i_i
 	integer i_z
-	integer i_check_value
-
-	if (i_int_value) 131,130,131
-
-  130 	if (i_z) 128,129,128
-  128	write(*,'(I1,$)') 0
-  129	return
-  131 	i_z = 1
-  	i_check_value = 1
-  132 	if (i_int_value - i_check_value) 134,133,133
-  133 	i_check_value = i_check_value * 10
-  	goto 132
-  134	i_check_value = i_check_value / 10
- 	i_i = i_int_value + 0
-  135	if (i_check_value) 137,137,136
-  136	write(*,'(I1,$)') (i_i/i_check_value)
-  	i_i = i_i - (i_i/i_check_value)*i_check_value
-  	i_check_value = i_check_value / 10
-  	goto 135
-  137 	end
+	if (i_int_value) 130,130,131
+  130 	if (i_z) 132,132,131
+  132 	return
+  131	if (i_z) 133,133,134
+  133 	if (i_int_value-9) 135,135,136
+  135	write(*,'(I1,$)')i_int_value
+  	i_z = 1
+  	return
+  136	if (i_int_value-99) 137,137,138
+  137	write(*,'(I2,$)')i_int_value
+  	i_z = 1
+  	return
+  138	write(*,'(I3,$)')i_int_value
+  	i_z = 1
+  	return
+  134	write(*,'(I0.3,$)')i_int_value
+  	i_z = 1
+  	end
 
 
 c  	DEBUG_PRINT
