@@ -277,3 +277,23 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   	write(*,*)"-----------"
   	end
 
+c 	DEALLOCATE
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	subroutine deallocate(i_bis,i_loc)
+	integer i_bis(3000)
+	integer i_loc
+	integer index1
+	integer index2
+	index1 = i_loc
+	index2 = index1 + i_bis(i_loc) + 2
+  69	if (3000 - index2) 666,666,665
+  665	i_bis(index1) = i_bis(index2)
+ 	index1 = index1 + 1
+ 	index2 = index2 + 1
+	goto 69
+  666	if(3000 - index1) 777,777,776
+  776	i_bis(index1) = 0
+	index1 = index1 + 1
+	goto 666
+  777	end
