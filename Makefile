@@ -1,6 +1,7 @@
-project1:
-	gfortran project1.f
+main:
+	gfortran -Wall main.f project1.f
 	./a.out
 tests:
-	gfortran project_1_new.f
-	./a.out
+	gfortran -Wall -o test_program test.f project1.f
+	./test_program
+	rm test_program
