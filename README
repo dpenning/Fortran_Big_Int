@@ -1,0 +1,14 @@
+CS450 Assignment 1
+David Pennington
+Nickolas Graczyk
+
+Build Instructions
+-------------------------
+Type 'make' in a shell from the directory containing these files to build the fortran program and to run the included tests.
+This expects the user to have the f95 compiler that is present on the Multilab.
+
+Description
+-------------------------
+We have attempted the extra credit function DEALLOCATE.
+ALLOCATE, ADD and PRINT are all implemented as well as auxillary functions to help debug the current state of the program.
+This is an implementation of BigInts in Fortran 77 that uses a "linked list" representation without actually using structures beyond arrays. Each BigInt is stored with its size as the first integer and the sign as the second int. The rest of the integers from 2 to size+2 are the values of that BigInt. This implementation puts the least significant bit first, so it's "Big Endian"

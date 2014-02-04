@@ -258,21 +258,27 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 c 	DEALLOCATE
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+C 	This function deallocates the bigint stored at location by moving
+C 	all bigints following it in the array to new positions based on
+C 	the location of the deallocated bigint
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        subroutine deallocate(i_bis,i_loc)
-        integer i_bis(3000)
-        integer i_loc
-        integer index1
-        integer index2
-        index1 = i_loc
-        index2 = index1 + i_bis(i_loc) + 2
-  69    if (3000 - index2) 666,666,665
-  665   i_bis(index1) = i_bis(index2)
-        index1 = index1 + 1
-        index2 = index2 + 1
-        goto 69
-  666   if(3000 - index1) 777,777,776
-  776   i_bis(index1) = 0
-        index1 = index1 + 1
-        goto 666
-  777   end
+	subroutine deallocate(i_bis,i_loc)
+	integer i_bis(3000)
+	integer i_loc
+	integer index1
+	integer index2
+	index1 = i_loc
+	index2 = index1 + i_bis(i_loc) + 2
+  69	if (3000 - index2) 666,666,665
+C 	copy next bigint into the first spot in the one to be deallocated 
+  665	i_bis(index1) = i_bis(index2)
+ 	index1 = index1 + 1
+ 	index2 = index2 + 1
+C	do so for each one in the array	
+	goto 69
+  666	if(3000 - index1) 777,777,776
+C	fill in (3000 - the number of digits deallocated) spots with 0s
+  776	i_bis(index1) = 0
+	index1 = index1 + 1
+	goto 666
+  777	endg
