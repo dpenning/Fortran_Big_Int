@@ -1,23 +1,23 @@
 c 	David Pennington
 c 	Nick Graczyk
 c
-c 	This Project can store and manipulate multiple bigints.
-c 	We allocate space for a linked list of bigintegers
+c 	This Project can store and manipulate multiple BigInts.
+c 	We allocate space for a linked list of big integers
 c 	Each BigInt is stored with its size as the first int
 c 	and its sign as the second int. The rest of the integers
-c 	from [2,size+2] are the values of the bigint
-c 	The system is "BigEndian" in that the least signifigant
-c       value is the start of the bigint
+c 	from [2,size+2] are the values of the BigInt
+c 	The system is "Big Endian" in that the least significant
+c       value is the start of the BigInt
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 c 	INIT
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This subroutine initializes the Bigint Storage
+c 	This subroutine initializes the BigInt Storage
 c 	it puts the value of 0 in all 3000 spots
 c 	in spot 1 it puts -1 to signal the end of the
 c 	"linked list"
 
-c 	This function takes in the bigint storage space as i_bis
+c 	This function takes in the BigInt storage space as i_bis
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         subroutine init(i_bis)
         integer i_bis(3000)
@@ -32,13 +32,13 @@ c 	set the first value to -1 to signify start of list
 
 c 	ALLOCATE
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This suybroutines finds the next place to create a bigint
+c 	This subroutines finds the next place to create a BigInt
 c 	in the linked list by finding the last index and
-c 	building the bigint there
+c 	building the BigInt there
 
-c 	This function takes in the bigint storage space as i_bis
+c 	This function takes in the BigInt storage space as i_bis
 c 	the number of digits as i_digits
-c 	and the location of the new bigint is saved as i_loc
+c 	and the location of the new BigInt is saved as i_loc
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         subroutine allocate(i_bis,i_digits,i_loc)
         integer i_bis(3000)
@@ -55,12 +55,12 @@ c 	jump out of the while loop
   2     continue
         goto 4
 
-c 	change the index to the next available bigint
+c 	change the index to the next available BigInt
   3     i_bii = i_bii + i_bis(i_bii)
         i_bii = i_bii + 2
         if (i_bii-3000) 500,501,501
   501   write(*,*)"<[WARNING]>"
-        write(*,*)"Allocated Too Much Bigint Memory"
+        write(*,*)"Allocated Too Much BigInt Memory"
         STOP
   500   goto 1
   4     continue
@@ -77,15 +77,15 @@ c 	set the return value
 
 c 	NORMALIZE
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This subroutine normalizes the bigint
+c 	This subroutine normalizes the BigInt
 c 	in other words, it takes (36)base_10 and turns it 
-c 	into (6,3)base_10 (big endian of course)
+c 	into (6,3)base_10 (big Endian of course)
 c 	This function assumes that you have the necessary storage space
-c 	to perform this operation. in other words your bigint needs
+c 	to perform this operation. in other words your BigInt needs
 c 	to have extra digits if it is going to be normalized and is 
 c 	too large.
 
-c 	the add function uses this to control the output bigint
+c 	the add function uses this to control the output BigInt
 c 	then the shorten function helps out the normalize function
 c 	by shortening the added value if need be
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,7 +98,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         i_length = i_bis(i_loc)
 
-c 	go through the bigint indexes from the bottom up
+c 	go through the BigInt indexes from the bottom up
         do 100 i_iter = i_loc+2,i_loc+1+i_length
 
 c 	if the value at the index is greater than the base
@@ -117,37 +117,37 @@ c 	add the quotient to the next index
 
 c 	SHORTEN
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This subroutine shortens a bigint if it is too long for its
+c 	This subroutine shortens a BigInt if it is too long for its
 c 	memory size. this means that it will change its length if it can
-c 	if the bigint is not at the end of the linked list it will
+c 	if the BigInt is not at the end of the linked list it will
 c 	cause link problems and overwrite problems, but it should only
-c 	be used by the add function so im not as worried about that
+c 	be used by the add function so I'm not as worried about that
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        subroutine shorten_bigint(i_bis,i_bii)
+        subroutine shorten_BigInt(i_bis,i_bii)
         integer i_bis(3000)
         integer i_bii
         integer i_last_index
 
-c 	get the index of the last value of the bigint
+c 	get the index of the last value of the BigInt
         i_last_index = i_bis(i_bii) + 1 + i_bii
         i_bis(i_last_index+1) = 0
 
-c 	while the value is the last index shorten the bigint by 1
+c 	while the value is the last index shorten the BigInt by 1
   300   if (i_bis(i_last_index)) 301,302,301
   302   i_bis(i_bii) = i_bis(i_bii) - 1
         i_last_index = i_last_index - 1
         goto 300
   301   continue
 
-c 	set the last value after the bigint to -1
-c 	this is so that we dont mess up the end of the linked list
+c 	set the last value after the BigInt to -1
+c 	this is so that we don't mess up the end of the linked list
         i_bis(i_last_index+1) = -1
         end
 
 c 	ADD
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This subroutine takes 2 indexs and performs an add on the 2 
-c 	bigints in the program, storing the result in a new bigint
+c 	This subroutine takes 2 indexes and performs an add on the 2 
+c 	BigInts in the program, storing the result in a new BigInt
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         subroutine add_bigints(i_bis,i_bi1,i_bi2,i_digit,i_loc)
         integer i_bis(3000)
@@ -156,7 +156,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         integer i_max_length
         integer i_loc
 
-c 	Find out which bigint is larger than the other and set
+c 	Find out which BigInt is larger than the other and set
 c  	the max length to that value
         if(i_bi1-i_bi2) 111,112,112
   111   i_max_length = i_bis(i_bi1)
@@ -169,10 +169,10 @@ c  	for this add, this means max_size+1
         call allocate(i_bis,i_max_length+1,i_loc)
 
 c 	go through all of the values and add them together and place
-c 	the result in the new bigint
+c 	the result in the new BigInt
         do 115 i_iter = 2,i_max_length+2
 
-c 	if the index is too high for the first bigints max_index
+c 	if the index is too high for the first BigInts max_index
 c 	then skip it
         if (i_bis(i_bi1)+2-i_iter) 117,117,116
   116   i_bis(i_loc+i_iter) = 0+i_bis(i_bi1+i_iter)
@@ -180,7 +180,7 @@ c 	then skip it
   117   i_bis(i_loc+i_iter) = 0
   118   continue
 
-c 	if the index is too high for the first bigints max_index
+c 	if the index is too high for the first BigInts max_index
 c 	then skip it  
         if (i_bis(i_bi2)+2-i_iter) 120,120,119
   119   i_bis(i_loc+i_iter) = i_bis(i_loc+i_iter)+i_bis(i_bi2+i_iter)
@@ -188,14 +188,14 @@ c 	then skip it
   115   continue
 
 c 	now that we have the final number, we need to normalize it
-c 	then we need to shorten it so that we dont use all of the memory
+c 	then we need to shorten it so that we don't use all of the memory
         call normalize_bigint(i_bis,i_loc,i_digit)
         call shorten_bigint(i_bis,i_loc)
         end 
 
 c 	PRINT
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This function takes the bigint values and turns them into
+c 	This function takes the BigInt values and turns them into
 c 	a printed formatted output
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         subroutine print_bigint(i_bis,i_loc)
@@ -214,7 +214,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 c 	PRINT 1 Character
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c	This function helps print the entire bigint
+c	This function helps print the entire BigInt
 c 	it takes in an integer and another integer that tells
 c 	us whether to print 0s or not
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,7 +243,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 c  	DEBUG_PRINT
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This Subroutine Prints a bigint array section, just used for
+c 	This Subroutine Prints a BigInt array section, just used for
 c 	debugging
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         subroutine print_bigint_debug(i_start,i_stop,i_bis)
@@ -259,9 +259,9 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 c 	DEALLOCATE
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c 	This function deallocates the bigint stored at location by moving
-c 	all bigints following it in the array to new positions based on
-c 	the location of the deallocated bigint
+c 	This function deallocates the BigInt stored at location by moving
+c 	all BigInts following it in the array to new positions based on
+c 	the location of the deallocated BigInt
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         subroutine deallocate(i_bis,i_loc)
         integer i_bis(3000)
@@ -271,7 +271,7 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         index1 = i_loc
         index2 = index1 + i_bis(i_loc) + 2
   69    if (3000 - index2) 666,666,665
-c 	copy next bigint into the first spot in the one to be deallocated 
+c 	copy next BigInt into the first spot in the one to be deallocated 
   665   i_bis(index1) = i_bis(index2)
         index1 = index1 + 1
         index2 = index2 + 1
