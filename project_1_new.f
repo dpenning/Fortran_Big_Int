@@ -70,8 +70,12 @@ c 	This function takes in the bigint storage space as i_bis
 c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine init(i_bis)
 	integer i_bis(3000)
+
+c 	go through all 3000 spots putting 0
 	do 6 iter = 1,3000
 	i_bis(iter) = 0
+
+c 	set the first value to -1 to signify start of list
   6	i_bis(1) = -1
 	end
 
@@ -89,14 +93,27 @@ c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	integer i_bis(3000)
 	integer i_digits
 	integer i_loc
+	integer i_bii
+c 	set the integer for the index to 1
 	i_bii = 1
+
+c 	while i_bis[i_bii] does not equal 0 or -1
   1	if(i_bis(i_bii)) 2,2,3
+
+c 	jump out of the while loop 
   2	continue
   	goto 4
+
+c 	change the index to the next available bigint
   3 	i_bii = i_bii + i_bis(i_bii)
   	i_bii = i_bii + 2
-  	goto 1
+  	if (i_bii-3000) 500,501,501
+  501 	write(*,*)"Too Much Bigint Memory"
+  	STOP
+  500	goto 1
   4	continue
+
+c 	set the return value
   	i_loc = i_bii
   	i_bis(i_bii) = i_digits
   	i_bis(i_bii+1) = 0
