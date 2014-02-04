@@ -1,5 +1,6 @@
+c	CS450 Assignment 1
 c 	David Pennington
-c 	Nick Graczyk
+c 	Nickolas Graczyk
 c
 c 	This Project can store and manipulate multiple BigInts.
 c 	We allocate space for a linked list of big integers
