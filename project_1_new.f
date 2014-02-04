@@ -1,30 +1,73 @@
+c 	David Pennington
+c 	Nick Graczyk
+c
+c 	This Project can store and manipulate multiple bigints.
+c 	We allocate space for a linked list of bigintegers
+c 	Each BigInt is stored with its size as the first int
+c 	and its sign as the second int. The rest of the integers
+c 	from [2,size+2] are the values of the bigint
+c 	The system is "BigEndian" in that the least signifigant
+c       value is the start of the bigint
+c
+c 	you will notice that the printing does not neccessarily 
+c 	represent what is on the requirements. this is because
+c 	you are misrepresenting the base with extra zeroes
+c 	on the end of a number. This is why I wrote my own value
+c 	printer that correctly prints the number in its base
+c
+c 	the easy fix for this is to just use '(*,I3)' but that
+c 	seems lazy
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+c 	MAIN PROJECT
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This is the start of the main project
+
+c 	the storage space for integers
+c 	is located at i_bigint_storage
+c 	the base is i_base
+c 	the the number of iterations is defined by
+c 	i_iterations
+
+c 	a value of 1 is initialized
+c 	then that value is added to itself to produce 2
+c 	then that value is added to itself to make 4 and so on
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	program project_1
 	integer i_bigint_storage(3000)
-	integer i_digit_value
+	integer i_base
 	integer i_digit_location
 	integer i_location
 	integer i_tmp
 	integer i_tmp_2
 
-	i_digit_value = 10
+	i_base = 1000
 	i_iterations = 50
 
 	call init(i_bigint_storage)
 	call allocate(i_bigint_storage,1,i_tmp)
 	i_bigint_storage(3) = 1
-	call print_bigint(i_bigint_storage,i_tmp,i_digit_value)
-	call add_bigints(i_bigint_storage,1,1,i_digit_value,i_tmp)
-	call print_bigint(i_bigint_storage,i_tmp,i_digit_value)
+	call print_bigint(i_bigint_storage,i_tmp,i_base)
+	call add_bigints(i_bigint_storage,1,1,i_base,i_tmp)
+	call print_bigint(i_bigint_storage,i_tmp,i_base)
 	do 400 iter = 2,i_iterations
-	call add_bigints(i_bigint_storage,i_tmp,i_tmp,i_digit_value,
-     1  i_tmp_2)
+	call add_bigints(i_bigint_storage,i_tmp,i_tmp,i_base,i_tmp_2)
 	i_tmp = i_tmp_2
-	call print_bigint(i_bigint_storage,i_tmp,i_digit_value)
+	call print_bigint(i_bigint_storage,i_tmp,i_base)
   400	continue
 
 	end program project_1
 
 c 	INIT
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This subroutine initializes the Bigint Storage
+c 	it puts the value of 0 in all 3000 spots
+c 	in spot 1 it puts -1 to signal the end of the
+c 	"linked list"
+
+c 	This function takes in the bigint storage space as i_bis
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine init(i_bis)
 	integer i_bis(3000)
 	do 6 iter = 1,3000
@@ -33,6 +76,15 @@ c 	INIT
 	end
 
 c 	ALLOCATE
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This suybroutines finds the next place to create a bigint
+c 	in the linked list by finding the last index and
+c 	building the bigint there
+
+c 	This function takes in the bigint storage space as i_bis
+c 	the number of digits as i_digits
+c 	and the location of the new bigint is saved as i_loc
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine allocate(i_bis,i_digits,i_loc)
 	integer i_bis(3000)
 	integer i_digits
@@ -55,6 +107,19 @@ c 	ALLOCATE
 	end
 
 c 	NORMALIZE
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This subroutine normalizes the bigint
+c 	in other words, it takes (36)base_10 and turns it 
+c 	into (6,3)base_10 (big endian of course)
+c 	This function assumes that you have the necessary storage space
+c 	to perform this operation. in other words your bigint needs
+c 	to have extra digits if it is going to be normalized and is 
+c 	too large.
+
+c 	the add function uses this to control the output bigint
+c 	then the shorten function helps out the normalize function
+c 	by shortening the added value if need be
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine normalize_bigint(i_bis,i_loc,i_digit)
 	integer i_bis(3000)
 	integer i_loc
@@ -74,6 +139,13 @@ c 	NORMALIZE
   	end
 
 c 	SHORTEN
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This subroutine shortens a bigint if it is too long for its
+c 	memory size. this means that it will change its length if it can
+c 	if the bigint is not at the end of the linked list it will
+c 	cause link problems and overwrite problems, but it should only
+c 	be used by the add function so im not as worried about that
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   	subroutine shorten_bigint(i_bis,i_bii)
   	integer i_bis(3000)
   	integer i_bii
@@ -90,6 +162,10 @@ c 	SHORTEN
   	end
 
 c 	ADD
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This subroutine takes 2 indexs and performs an add on the 2 
+c 	bigints in the program, storing the result in a new bigint
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   	subroutine add_bigints(i_bis,i_bi1,i_bi2,i_digit,i_loc)
   	integer i_bis(3000)
   	integer i_bi1
@@ -117,6 +193,10 @@ c 	ADD
   	end 
 
 c 	PRINT
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This function takes the bigint values and turns them into
+c 	a printed formatted output
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine print_bigint(i_bis,i_loc,i_digit)
 	integer i_bis(3000)
 	integer i_loc
@@ -133,7 +213,11 @@ c 	PRINT
 	end
 
 c 	PRINT 1 Character
-
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c	This function helps print the entire bigint
+c 	it takes in an integer and another integer that tells
+c 	us whether to print 0s or not
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine print_one_character(i_int_value,i_z)
 	integer i_int_value
 	integer i_i
@@ -160,8 +244,11 @@ c 	PRINT 1 Character
   137 	end
 
 
-
-c 	This Subroutine Prints a bigint array section
+c  	DEBUG_PRINT
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+c 	This Subroutine Prints a bigint array section, just used for
+c 	debugging
+c %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	subroutine print_bigint_debug(i_start,i_stop,i_bis)
 	integer i_start
 	integer i_stop
@@ -172,3 +259,4 @@ c 	This Subroutine Prints a bigint array section
   105	continue
   	write(*,*)"-----------"
   	end
+
