@@ -59,7 +59,8 @@ c 	change the index to the next available bigint
   3     i_bii = i_bii + i_bis(i_bii)
         i_bii = i_bii + 2
         if (i_bii-3000) 500,501,501
-  501   write(*,*)"Too Much Bigint Memory"
+  501   write(*,*)"<[WARNING]>"
+        write(*,*)"Allocated Too Much Bigint Memory"
         STOP
   500   goto 1
   4     continue
